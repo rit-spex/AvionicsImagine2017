@@ -19,7 +19,7 @@ void loop() {
     Serial.println(imu.calcAccel(imu.ay));
     Serial.println(imu.calcAccel(imu.az));
     Serial.println("===============================");
-    delay(1); 
+    delay(500); 
 }
 
 void _init() {
@@ -28,6 +28,7 @@ void _init() {
     imu.settings.device.commInterface = IMU_MODE_I2C;
     imu.settings.device.mAddress = LSM9DS1_M;
     imu.settings.device.agAddress = LSM9DS1_AG;
+    imu.begin();
     
     // TODO: error check and handle imu failing to init
 }
