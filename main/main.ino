@@ -2,23 +2,27 @@
 
 #include <SparkFunLSM9DS1.h>
 
+// LSM9DS1 I2C
+#define LSM9DS1_M   0x1E
+#define LSM9DS1_AG 0x6B
+
 LSM9DS1 imu;
 void setup() {
-    init();
+    _init();
     Serial.begin(9600);
 }
 
 void loop() {
     imu.readAccel(); 
-    Serial.write("===============================")
-    Serial.write(String(imu.calcAccel(imu.ax), precision));
-    Serial.write(String(imu.calcAccel(imu.ay), precision));
-    Serial.write(String(imu.calcAccel(imu.az), precision));
-    Serial.write("===============================")
-    sleep(1); 
+    Serial.println("===============================");
+    Serial.println(imu.calcAccel(imu.ax));
+    Serial.println(imu.calcAccel(imu.ay));
+    Serial.println(imu.calcAccel(imu.az));
+    Serial.println("===============================");
+    delay(1); 
 }
 
-void init() {
+void _init() {
     //////////////////////////////////////////////////////////////////////////
     /// Setup IMU
     imu.settings.device.commInterface = IMU_MODE_I2C;
