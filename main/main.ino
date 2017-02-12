@@ -5,11 +5,14 @@
 // LSM9DS1 I2C
 #define LSM9DS1_M   0x1E
 #define LSM9DS1_AG  0x6B
+
 #define GRAVITY     9.807
 #define DECLINATION 11.48 //Magnetic declination in Rochester, NY
-#define DELAY       1000
+#define DELAY       1500
 
-//float lightResistance;
+//Light sensor peak at 540nm
+int lightSensorValue;
+float lightResistance;
 float pitch, roll, heading;
 float ax, ay, az, mx, my, mz;
 
@@ -23,16 +26,13 @@ void loop() {
     //IMU
     printAttitude();
     printRawIMU();
-    delay(DELAY);
-    
+
     //Light Sensor
-    /*int sensorVal = analogRead(0);
-    lightResistance = (float) (1023-sensorVal) * 10 / sensorVal;
-    Serial.println("================================");
-    Serial.println("Analog read: " + sensorVal);
-    Serial.println("Resistance: " + lightResistance, DEC);
-    Serial.println("================================");
-    delay(500);*/
+    printLightSensor();
+    if(lightSensorValue > 400) {
+      Serial.println("Optimal light coverage");
+    }
+    delay(DELAY);
 
     
 }
@@ -120,5 +120,20 @@ void printRawIMU() {
     Serial.println(" m/s");
     Serial.println("================================");
     Serial.println("");
+}
+
+void readLightSensor() {
+    lightSensorValue = analogRead(0);
+    lightResistance = (float) (1023-lightSensorValue) * 10 / lightSensorValue;
+}
+
+void printLightSensor() {
+    readLightSensor();
+    Serial.println("================================");
+    Serial.print("Analog read: ");
+    Serial.println(lightSensorValue);
+    Serial.print("Resistance: ");
+    Serial.println(lightResistance, DEC);
+    Serial.println("================================");
 }
 
