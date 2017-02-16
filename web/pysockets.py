@@ -1,17 +1,31 @@
 from socketIO_client import SocketIO
 import time
+import sys
 import random
 
+HOST = 'localhost'
+PORT = 3000
+DELAY = 0.5 #default time
+
+
+
+def getDelay(val):
+  try:
+    return float(val)/1000.0
+  except ValueError:
+    return DELAY #default time
+
 def main():
-  HOST = 'localhost'
-  PORT = 3000
-  DELAY = 0.5 #in seconds
+  if(len(sys.argv) > 1): #in seconds
+    delay = getDelay(sys.argv[1])
 
   socketIO = SocketIO(HOST, PORT)
   while(True):
+    print("here")
     xChange, yChange, zChange = readData()
     socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange})
-    time.sleep(DELAY)
+    time.sleep(delay)
+
 def readData():
   x = random.uniform(-0.01,0.01);
   y = random.uniform(-0.01,0.01);
