@@ -42,9 +42,12 @@ node index.js
 ````
 
 ````
-python pysockets.py
+python pysockets.py [delay/period-in-ms]
 ````
 If you have both Python 2 & Python 3 installed (such as on a Raspberry Pi), Python 3 is likely `python3` in your PATH, so you will need to change the previous command to:
 ````
-python3 pysockets.py
+python3 pysockets.py [delay/period-in-ms]
 ````
+
+[delay/period-in-ms]
+This optional argument will change the delay between each update (read & transmit) to the desired value (in milliseconds). If this option is not provided, the default delay is 500 ms (0.5 s).
