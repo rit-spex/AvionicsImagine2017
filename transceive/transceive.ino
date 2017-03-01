@@ -1,5 +1,6 @@
 #include <Arduino.h>
 
+
 // LoRa 9x_TX
 // -*- mode: C++ -*-
 // Example sketch showing how to create a simple messaging client (transmitter)
@@ -10,23 +11,30 @@
 
 #include <SPI.h>
 #include <RH_RF95.h>
-#include <transceive.hpp>
 #include <Wire.h>
 #include <math.h>
 #include <SparkFunLSM9DS1.h>
 #include <string.h>
-// #include <elapsedMillis.h>
 
-#define MESSAGE_SIZE 36
+//
+// LSM9DS1 I2C
+#define LSM9DS1_M   0x1E
+#define LSM9DS1_AG  0x6B
+
+#define RFM95_CS 10
+#define RFM95_RST 9
+#define RFM95_INT 2
+
+// Change to 434.0 or other frequency, must match RX's freq!
+#define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 LSM9DS1 imu;
-// ax ay az mx my mz gx gy gz
-float imuRegister[9];
-uint8_t message[MESSAGE_SIZE];
 
+float pitch, roll, heading;
+float ax, ay, az, mx, my, mz;
 
 void setup()
 {
@@ -69,11 +77,24 @@ void setup()
   Serial.println("_init passed");
 }
 
+int16_t packetnum = 0;  // packet counter, we increment per xmission
+
 void loop()
 {
   readIMU();
-  sendMessage();
   Serial.println("Sending to rf95_server");
+  // Send a message to rf95_server
+
+  char data[4];
+  Serial.println(ax);
+  memcpy(&data, &ax, sizeof(data));
+  Serial.print("Sending "); Serial.println(data);
+
+  Serial.println("Sending..."); delay(10);
+  rf95.send((uint8_t *)data, sizeof(data));
+
+  Serial.println("Waiting for packet to complete..."); delay(10);
+  rf95.waitPacketSent();
   delay(1000);
 }
 
@@ -93,19 +114,10 @@ void readIMU() {
     imu.readAccel();
     imu.readMag();
 
-    imuRegister[AX] = imu.calcAccel(imu.ax);
-    imuRegister[AY] = imu.calcAccel(imu.ay);
-    imuRegister[AZ] = imu.calcAccel(imu.az);
-    imuRegister[MX] = imu.calcMag(imu.mx);
-    imuRegister[MY] = imu.calcMag(imu.my);
-    imuRegister[MZ] = imu.calcMag(imu.mz);
-    imuRegister[GX] = imu.calcGyro(imu.gx);
-    imuRegister[GY] = imu.calcGyro(imu.gy);
-    imuRegister[GZ] = imu.calcGyro(imu.gz);
-}
-
-void sendMessage() {
-    memcpy(&message, &imuRegister, sizeof(imuRegister));
-    rf95.send(message, sizeof(message));
-    rf95.waitPacketSent();
+    ax = imu.ax;
+    ay = imu.ay;
+    az = imu.az;
+    mx = imu.mx;
+    my = imu.my;
+    mz = imu.mz;
 }
