@@ -13,7 +13,7 @@ def get_data():
     while True:
         if (port.read(1) == SOH):
             break
-    return(struct.unpack('fffffffff', port.read(36)))
+    return(struct.unpack('ffffff', port.read(36)))
 
 def calculate_attitude():
     data = get_data()

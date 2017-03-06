@@ -17,7 +17,7 @@
 #include <string.h>
 // #include <elapsedMillis.h>
 
-#define MESSAGE_SIZE 36
+#define MESSAGE_SIZE 24
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -107,7 +107,6 @@ void _init() {
 }
 
 void readIMU() {
-    imu.readGyro();
     imu.readAccel();
     imu.readMag();
 
@@ -117,9 +116,6 @@ void readIMU() {
     imuRegister[MX] = imu.calcMag(imu.mx);
     imuRegister[MY] = imu.calcMag(imu.my);
     imuRegister[MZ] = imu.calcMag(imu.mz);
-    imuRegister[GX] = imu.calcGyro(imu.gx);
-    imuRegister[GY] = imu.calcGyro(imu.gy);
-    imuRegister[GZ] = imu.calcGyro(imu.gz);
 }
 
 void sendMessage() {
