@@ -10,18 +10,18 @@ DECLINATION = 11.47
 
 
 class Emitter:
-    def__init__(self, port_name, baud_rate):
+    def __init__(self, port_name, baud_rate):
         self.port_name = port_name
         self.baud_rate = baud_rate
         self.port = serial.Serial(port_name, baudrate=baud_rate)
 
-        def get_data():
+        def get_data(self):
             while True:
                 if (self.port.read(1) == SOH):
                     break
-            return (struct.unpack(('f' * NUM_FLOATS), port.read(NUM_BYTES))
+            return (struct.unpack(('f' * NUM_FLOATS), port.read(NUM_BYTES)))
 
-        def calculate_attitude():
+        def calculate_attitude(self):
             data = self.get_data()
             ax = data[0]
             ay = data[1]

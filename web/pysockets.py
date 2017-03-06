@@ -2,7 +2,8 @@ from socketIO_client import SocketIO
 import time
 import sys
 import random
-from serial_in import calculate_attitude
+
+from emitter import Emitter
 
 HOST = 'localhost'
 PORT = 3000
@@ -16,14 +17,14 @@ def getDelay(val):
   except ValueError:
     return DELAY #default time
 
-def main():
+def main(e):
   if(len(sys.argv) > 1): #in seconds
     delay = getDelay(sys.argv[1])
 
   socketIO = SocketIO(HOST, PORT)
   while(True):
     print("here")
-    xChange, yChange, zChange = calculate_attitude()
+    xChange, yChange, zChange = e.calculate_attitude()
     socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange})
     time.sleep(delay)
 
@@ -34,4 +35,5 @@ def readData():
   return x, y, x;
 
 if __name__ == '__main__':
-  main()
+  e = Emitter("/dev/ttyAMA0", 9600)
+  main(e)
