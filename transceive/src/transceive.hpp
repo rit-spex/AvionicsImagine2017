@@ -25,9 +25,6 @@ typedef enum imu_register_e {
     MX,
     MY,
     MZ,
-    GX,
-    GY,
-    GZ,
 } imuRegister_e;
 
 #endif

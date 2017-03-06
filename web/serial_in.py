@@ -4,50 +4,56 @@ import struct
 import math
 
 SOH = b'\x01'
+NUM_FLOATS = 6
+NUM_BYTES = NUM_FLOATS * 4
+DECLINATION = 11.47
 
-port = serial.Serial("/dev/ttyACM0")
-declination = 11.47
 
-def get_data():
-    # wait on SOH character to read in all data values
-    while True:
-        if (port.read(1) == SOH):
-            break
-    return(struct.unpack('fffffffff', port.read(36)))
+class Emitter:
+    def__init__(self, port_name, baud_rate):
+        self.port_name = port_name
+        self.baud_rate = baud_rate
+        self.port = serial.Serial(port_name, baudrate=baud_rate)
 
-def calculate_attitude():
-    data = get_data()
-    ax = data[0]
-    ay = data[1]
-    az = data[2]
-    mx = data[3]
-    my = data[4]
-    mz = data[5]
+        def get_data():
+            while True:
+                if (self.port.read(1) == SOH):
+                    break
+            return (struct.unpack(('f' * NUM_FLOATS), port.read(NUM_BYTES))
 
-    pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az))
-    roll = math.atan2(ay, az)
-    heading = 0.0
+        def calculate_attitude():
+            data = self.get_data()
+            ax = data[0]
+            ay = data[1]
+            az = data[2]
+            mx = data[3]
+            my = data[4]
+            mz = data[5]
 
-    if(my == 0):
-        heading = (mx < 0) if math.pi else 0
-    else:
-        heading = math.atan2(mx, my)
+            pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az))
+            roll = math.atan2(ay, az)
+            heading = 0.0
 
-    heading -= declination * math.pi / 180.0
+            if(my == 0):
+                heading = (mx < 0) if math.pi else 0
+            else:
+                heading = math.atan2(mx, my)
 
-    if(heading > math.pi):
-        heading -= 2 * math.pi
-    elif(heading < 0):
-        heading += 2 * math.pi
+            heading -= DECLINATION * math.pi / 180.0
 
-    pitch *= 180.0 / math.pi
-    roll *= 180.0 / math.pi
-    heading *= 180.0 / math.pi
+            if(heading > math.pi):
+                heading -= 2 * math.pi
+            elif(heading < 0):
+                heading += 2 * math.pi
 
-    tup = (pitch, roll, heading)
-    return tup
+            pitch *= 180.0 / math.pi
+            roll *= 180.0 / math.pi
+            heading *= 180.0 / math.pi
+
+            return pitch, roll, heading
+
 
 if __name__ == '__main__':
     while True:
-        # print(calculate_attitude())
-        print(get_data())
+        print(calculate_attitude())
+        # print(get_data())

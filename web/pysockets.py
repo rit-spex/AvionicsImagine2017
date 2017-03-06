@@ -2,6 +2,7 @@ from socketIO_client import SocketIO
 import time
 import sys
 import random
+from serial_in import calculate_attitude
 
 HOST = 'localhost'
 PORT = 3000
@@ -22,7 +23,7 @@ def main():
   socketIO = SocketIO(HOST, PORT)
   while(True):
     print("here")
-    xChange, yChange, zChange = readData()
+    xChange, yChange, zChange = calculate_attitude()
     socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange})
     time.sleep(delay)
 
