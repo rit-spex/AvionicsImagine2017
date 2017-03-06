@@ -5,8 +5,8 @@ import math
 
 SOH = b'\x01'
 
-port = serial.Serial("/dev/ttyACM2")
-declination = 11.48
+port = serial.Serial("/dev/ttyACM0")
+declination = 11.47
 
 def get_data():
     # wait on SOH character to read in all data values
@@ -26,18 +26,18 @@ def calculate_attitude():
 
     pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az))
     roll = math.atan2(ay, az)
-    heading
+    heading = 0.0
 
-    if(my == 0)
-        heading = (mx < 0) ? math.pi : 0
-    else
+    if(my == 0):
+        heading = (mx < 0) if math.pi else 0
+    else:
         heading = math.atan2(mx, my)
 
     heading -= declination * math.pi / 180.0
 
-    if(heading > math.pi)
+    if(heading > math.pi):
         heading -= 2 * math.pi
-    else if(heading < 0)
+    elif(heading < 0):
         heading += 2 * math.pi
 
     pitch *= 180.0 / math.pi
@@ -49,4 +49,5 @@ def calculate_attitude():
 
 if __name__ == '__main__':
     while True:
-        print(calculate_attitude())
+        # print(calculate_attitude())
+        print(get_data())
