@@ -423,12 +423,12 @@ var initSVGObject = function() {
 	}
 
 	function render() {
-		group1.rotation.x += DATA.x;
-		group1.rotation.y += DATA.y;
-		group1.rotation.z += DATA.z;
-		group2.rotation.x += DATA.x;
-		group2.rotation.y -= DATA.y;
-		group2.rotation.z -= DATA.z;
+		group1.rotation.x = DATA.x;
+		group1.rotation.y = DATA.y;
+		group1.rotation.z = DATA.z;
+		group2.rotation.x = DATA.x;
+		group2.rotation.y = -DATA.y;
+		group2.rotation.z = -DATA.z;
 		renderer.render( scene, camera );
 	}
 </script>
