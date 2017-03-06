@@ -83,6 +83,24 @@ void _init() {
     imu.settings.device.commInterface = IMU_MODE_I2C;
     imu.settings.device.mAddress = LSM9DS1_M;
     imu.settings.device.agAddress = LSM9DS1_AG;
+
+    /////////////////////////////////////////////////////////////////////////
+    // Gyro Setup
+    imu.settings.gyro.enabled = false;
+
+    /////////////////////////////////////////////////////////////////////////
+    // Accel Setup
+    imu.settings.accel.sampleRate = 3; // 3 = 119Hz
+    imu.settings.accel.highResEnable = true;
+
+    /////////////////////////////////////////////////////////////////////////
+    // Mag Setup
+      imu.settings.mag.sampleRate = 7;
+      imu.settings.mag.tempCompensationEnable = true;
+      imu.settings.mag.XYPerformance = 3;
+      imu.settings.mag.ZPerformance = 3;
+
+
     imu.begin();
 
     // TODO: error check and handle imu failing to init
