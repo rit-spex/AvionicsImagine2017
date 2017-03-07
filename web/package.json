@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Avionics Project for ImagineRIT 2017",
   "dependencies": {
-    "express": "^4.14.1",
+    "express": "^4.10.2",
+    "express-nunjucks": "^2.1.3",
+    "nunjucks": "^3.0.0",
     "socket.io": "^1.7.2"
   }
 }

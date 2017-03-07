@@ -26,7 +26,7 @@ body {
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/84/three.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.min.js"></script>
-
+<script type="text/javascript" src="loaders/ColladaLoader.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
@@ -342,9 +342,34 @@ var init3d = function(){
 
 	/// Global : group
 	group1 = new THREE.Group();
-	scene.add( group1 );
+	//scene.add( group1 );
 	group2 = new THREE.Group();
-	scene.add( group2 );
+	//scene.add( group2 );
+	group3 = new THREE.Group();
+
+	//var loader = new THREE.ObjectLoader();
+	//loader.load("lambo-json/lambo.json", function( obj ) {
+		//var meshLambo = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+	//	obj.scale.set(35,35,35);
+	//	group3.add( obj );
+	//	scene.add( group3 );
+	//});
+	console.log(scene);
+
+	var loader = new THREE.ColladaLoader();
+	loader.options.convertUpAxis = true;
+	loader.load("cubesat.dae", function( collada ) {
+		dae = collada.scene;
+		dae.traverse( function ( child ) {
+			if ( child instanceof THREE.Mesh ) {
+				child.material.color.setHex('0xff7b00');
+			}
+		});
+		dae.scale.set(1000,1000,1000);
+		dae.updateMatrix();
+		group3.add( dae );
+		scene.add( group3 );
+	});
 
 	/// direct light
 	var light = new THREE.DirectionalLight( 0x404040 );
@@ -356,10 +381,10 @@ var init3d = function(){
 	scene.add( ambientLight );
 
 
-	var objs = initSVGObject();
-	addGeoObject( group1, objs[0] );
-	addGeoObject( group2, objs[1] );
-	group2.x = Math.PI;
+	//var objs = initSVGObject();
+	//addGeoObject( group1, objs[0] );
+	//addGeoObject( group2, objs[1] );
+	//group2.x = Math.PI;
 };
 
 var initSVGObject = function() {
@@ -423,12 +448,10 @@ var initSVGObject = function() {
 	}
 
 	function render() {
-		group1.rotation.x = DATA.x;
-		group1.rotation.y = DATA.y;
-		group1.rotation.z = DATA.z;
-		group2.rotation.x = DATA.x;
-		group2.rotation.y = -DATA.y;
-		group2.rotation.z = -DATA.z;
+		group3.rotation.x = DATA.x;
+		group3.rotation.y = DATA.y;
+		group3.rotation.z = DATA.z;
+
 		renderer.render( scene, camera );
 	}
 </script>
