@@ -1,9 +1,9 @@
 #ifndef __TRANSCEIVE_HPP__
 #define __TRANSCEIVE_HPP__
 
-// LSM9DS1 I2C
-#define LSM9DS1_M   0x1E
-#define LSM9DS1_AG  0x6B
+#define LSM9DS1_M_CS	7
+#define LSM9DS1_AG_CS	8
+
 
 // RFM Pin definitions
 #define RFM95_CS 10

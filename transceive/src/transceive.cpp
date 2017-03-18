@@ -17,7 +17,7 @@
 #include <string.h>
 // #include <elapsedMillis.h>
 
-#define MESSAGE_SIZE 24
+#define MESSAGE_SIZE 36
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -80,33 +80,16 @@ void loop()
 void _init() {
     //////////////////////////////////////////////////////////////////////////
     /// Setup IMU
-    imu.settings.device.commInterface = IMU_MODE_I2C;
-    imu.settings.device.mAddress = LSM9DS1_M;
-    imu.settings.device.agAddress = LSM9DS1_AG;
-
-    /////////////////////////////////////////////////////////////////////////
-    // Gyro Setup
-    imu.settings.gyro.enabled = false;
-
-    /////////////////////////////////////////////////////////////////////////
-    // Accel Setup
-    imu.settings.accel.sampleRate = 3; // 3 = 119Hz
-    imu.settings.accel.highResEnable = true;
-
-    /////////////////////////////////////////////////////////////////////////
-    // Mag Setup
-      imu.settings.mag.sampleRate = 7;
-      imu.settings.mag.tempCompensationEnable = true;
-      imu.settings.mag.XYPerformance = 3;
-      imu.settings.mag.ZPerformance = 3;
-
-
+    imu.settings.device.commInterface = IMU_MODE_SPI;
+    imu.settings.device.mAddress = LSM9DS1_M_CS;
+    imu.settings.device.agAddress = LSM9DS1_AG_CS;
     imu.begin();
 
     // TODO: error check and handle imu failing to init
 }
 
 void readIMU() {
+    imu.readGyro();
     imu.readAccel();
     imu.readMag();
 
@@ -116,6 +99,9 @@ void readIMU() {
     imuRegister[MX] = imu.calcMag(imu.mx);
     imuRegister[MY] = imu.calcMag(imu.my);
     imuRegister[MZ] = imu.calcMag(imu.mz);
+    imuRegister[GX] = imu.calcGyro(imu.gx);
+    imuRegister[GY] = imu.calcGyro(imu.gy);
+    imuRegister[GZ] = imu.calcGyro(imu.gz);
 }
 
 void sendMessage() {
