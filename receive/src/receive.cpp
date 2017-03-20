@@ -10,22 +10,18 @@
 #include <RH_RF95.h>
 
 #define RFM95_CS 10
-#define RFM95_RST 7
+#define RFM95_RST 9
 #define RFM95_INT 3
 
-#define MESSAGE_SIZE 24 
+#define MESSAGE_SIZE 24
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 915.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
-// Blinky on receipt
-#define LED 13
-
 void setup()
 {
-  pinMode(LED, OUTPUT);
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
@@ -72,12 +68,11 @@ void loop()
 
     if (rf95.recv(buf, &len))
     {
-      digitalWrite(LED, HIGH);
       // SOH Message Byte
       Serial.write((uint8_t) 0x1);
       // Raw Message
       Serial.write(buf, len);
-      digitalWrite(LED, LOW);
+      Serial.println("Good recieve");
     }
     else
     {
