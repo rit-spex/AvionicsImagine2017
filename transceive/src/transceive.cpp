@@ -73,8 +73,7 @@ void loop()
 {
   readIMU();
   sendMessage();
-  Serial.println("Sending to rf95_server");
-  delay(1000);
+  delay(10);
 }
 
 void _init() {
@@ -99,9 +98,6 @@ void readIMU() {
     imuRegister[MX] = imu.calcMag(imu.mx);
     imuRegister[MY] = imu.calcMag(imu.my);
     imuRegister[MZ] = imu.calcMag(imu.mz);
-    imuRegister[GX] = imu.calcGyro(imu.gx);
-    imuRegister[GY] = imu.calcGyro(imu.gy);
-    imuRegister[GZ] = imu.calcGyro(imu.gz);
 }
 
 void sendMessage() {
