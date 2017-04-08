@@ -1,6 +1,8 @@
 ## Requires
 * [Python 3](https://www.python.org)
   * [socketIO-client](https://pypi.python.org/pypi/socketIO-client)
+  * [pySerial](https://pythonhosted.org/pyserial/)
+  * [NumPy](http://www.numpy.org)
 * [Node.js](https://nodejs.org)
   * [Express](http://expressjs.com)
   * [Socket.io](http://socket.io)
@@ -17,6 +19,15 @@ If you're having issues try
 ````
 apt-get install python3-pip
 pip3 install -U socketIO-client
+````
+
+[NumPy](https://www.scipy.org/scipylib/download.html):
+````
+pip install -U numpy
+````
+[pySerial](https://pypi.python.org/pypi/pyserial):
+````
+pip install -U pyserial
 ````
 
 [Node.js](https://nodejs.org/en/download/):
