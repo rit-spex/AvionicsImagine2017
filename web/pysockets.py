@@ -4,7 +4,7 @@ import sys
 import random
 import math
 import numpy as np
-from solarpower getSolarPower
+from solarpower as getSolarPower
 from emitter import Emitter
 
 HOST = 'localhost'
