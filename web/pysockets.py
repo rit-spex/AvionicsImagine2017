@@ -2,14 +2,14 @@ from socketIO_client import SocketIO
 import time
 import sys
 import random
-
+import math
+import numpy as np
+from solarpower as getSolarPower
 from emitter import Emitter
 
 HOST = 'localhost'
 PORT = 3000
 DELAY = 0.5 #default time
-
-
 
 def getDelay(val):
   try:
@@ -25,7 +25,8 @@ def main(e):
   while(True):
     print("here")
     xChange, yChange, zChange = e.calculate_attitude()
-    socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange})
+    solarPower = getSolarPower(xChange, yChange, zChange)
+    socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange, 'solar':solarpower})
     time.sleep(delay)
 
 def readData():
