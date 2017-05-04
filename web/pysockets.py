@@ -4,7 +4,7 @@ import sys
 import random
 import math
 import numpy as np
-from solarpower as getSolarPower
+from solarpower import getSolarPower
 from emitter import Emitter
 
 HOST = 'localhost'
@@ -26,7 +26,7 @@ def main(e):
     print("here")
     xChange, yChange, zChange = e.calculate_attitude()
     solarPower = getSolarPower(xChange, yChange, zChange)
-    socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange, 'solar':solarpower})
+    socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange, 'solar':solarPower})
     time.sleep(delay)
 
 def readData():
@@ -36,5 +36,5 @@ def readData():
   return x, y, x;
 
 if __name__ == '__main__':
-  e = Emitter("/dev/ttyAMA0", 9600)
+  e = Emitter("/dev/ttyACM0", 9600)
   main(e)
