@@ -13,7 +13,7 @@
 #define RFM95_RST 7
 #define RFM95_INT 3
 
-#define MESSAGE_SIZE 24 
+#define MESSAGE_SIZE 24
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 915.0
 

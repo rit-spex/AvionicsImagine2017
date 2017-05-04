@@ -30,14 +30,17 @@ uint8_t message[MESSAGE_SIZE];
 
 void setup()
 {
+  pinMode(17, OUTPUT);
+
+  digitalWrite(17, LOW);
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
-  while (!Serial);
+  //while (!Serial);
   Serial.begin(9600);
   delay(100);
 
-  Serial.println("Arduino LoRa TX Test!");
+  //Serial.println("Arduino LoRa TX Test!");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -46,17 +49,17 @@ void setup()
   delay(10);
 
   while (!rf95.init()) {
-    Serial.println("LoRa radio init failed");
+    //Serial.println("LoRa radio init failed");
     while (1);
   }
-  Serial.println("LoRa radio init OK!");
+  //Serial.println("LoRa radio init OK!");
 
   // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
   if (!rf95.setFrequency(RF95_FREQ)) {
-    Serial.println("setFrequency failed");
+    //Serial.println("setFrequency failed");
     while (1);
   }
-  Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
+  //Serial.print("Set Freq to: "); //Serial.println(RF95_FREQ);
 
   // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
 
@@ -64,17 +67,20 @@ void setup()
   // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
-  Serial.print("Calling _init");
+  //Serial.print("Calling _init");
   _init();
-  Serial.println("_init passed");
+  //Serial.println("_init passed");
 }
 
 void loop()
 {
+  delay(5);
+  digitalWrite(17, HIGH);
   readIMU();
   sendMessage();
-  Serial.println("Sending to rf95_server");
-  delay(1000);
+  Serial.print("Sending to rf95_server");
+  delay(5);
+  digitalWrite(17, LOW);
 }
 
 void _init() {
@@ -99,9 +105,6 @@ void readIMU() {
     imuRegister[MX] = imu.calcMag(imu.mx);
     imuRegister[MY] = imu.calcMag(imu.my);
     imuRegister[MZ] = imu.calcMag(imu.mz);
-    imuRegister[GX] = imu.calcGyro(imu.gx);
-    imuRegister[GY] = imu.calcGyro(imu.gy);
-    imuRegister[GZ] = imu.calcGyro(imu.gz);
 }
 
 void sendMessage() {
