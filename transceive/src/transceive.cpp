@@ -108,7 +108,11 @@ void readIMU() {
 }
 
 void sendMessage() {
+    String msg = String('s') + String(imuRegister[AX], 2) + String(',') + String(imuRegister[AY], 2) + String(',') + String(imuRegister[AY], 2) + String(',')
+      + String(imuRegister[MX], 2) + String(',') + String(imuRegister[MY], 2) + String(',') + String(imuRegister[MZ], 2) + String(',') + String('f');
+    Serial.println(msg);
+
     memcpy(&message, &imuRegister, sizeof(imuRegister));
-    rf95.send(message, sizeof(message));
+    rf95.send((uint8_t*)msg.c_str(), sizeof(message));
     rf95.waitPacketSent();
 }
