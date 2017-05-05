@@ -1,5 +1,6 @@
 from socketIO_client import SocketIO
 import time
+from datetime import datetime
 import sys
 import random
 import math
@@ -10,6 +11,7 @@ from emitter import Emitter
 HOST = 'localhost'
 PORT = 3000
 DELAY = 0.5 #default time
+NODE_NAME = 'AvionicsImagine1'
 
 def getDelay(val):
   try:
@@ -26,7 +28,13 @@ def main(e):
     print("here")
     xChange, yChange, zChange = e.calculate_attitude()
     solarPower = getSolarPower(xChange, yChange, zChange)
-    socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange, 'solar':solarPower})
+    dataPacket = {
+      dateCreated: datetime.utcnow(),
+      name: NODE_NAME,
+      payload:  {'isDeg':false, 'hasAvionics':true, 'roll':xChange, 'pitch':yChange, 'yaw':zChange, 'solar':solarPower}
+    };
+      
+    socketIO.emit('sensorData': dataPacket)
     time.sleep(delay)
 
 def readData():
