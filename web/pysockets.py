@@ -1,9 +1,10 @@
-from socketIO_client import SocketIO
 import time
 import sys
 import random
 import math
 import numpy as np
+
+from socketIO_client import SocketIO
 from solarpower import getSolarPower
 from emitter import Emitter
 
@@ -11,30 +12,35 @@ HOST = 'localhost'
 PORT = 3000
 DELAY = 0.5 #default time
 
-def getDelay(val):
-  try:
-    return float(val)/1000.0
-  except ValueError:
-    return DELAY #default time
+def get_delay(val):
+    """returns a delay of the given value."""
+    try:
+        return float(val)/1000.0
+    except ValueError:
+        return DELAY #default time
 
-def main(e):
-  if(len(sys.argv) > 1): #in seconds
-    delay = getDelay(sys.argv[1])
+def main(emitter):
+    """Main functionality of the pysocket client."""
+    delay = DELAY
+    if len(sys.argv) > 1: #in seconds
+        delay = get_delay(sys.argv[1])
 
-  socketIO = SocketIO(HOST, PORT)
-  while(True):
-    print("here")
-    xChange, yChange, zChange = e.calculate_attitude()
-    solarPower = getSolarPower(xChange, yChange, zChange)
-    socketIO.emit('fromIMU', {'x':xChange, 'y':yChange, 'z':zChange, 'solar':solarPower})
-    time.sleep(delay)
-
-def readData():
-  x = random.uniform(-0.01,0.01);
-  y = random.uniform(-0.01,0.01);
-  z = random.uniform(-0.01,0.01);
-  return x, y, x;
+    socket = SocketIO(HOST, PORT)
+    while True:
+        print("here")
+        x_change, y_change, z_change = emitter.calculate_attitude()
+        solar_power = getSolarPower(x_change, y_change, z_change)
+        socket.emit('fromIMU',
+                    {
+                        'pitch':x_change,
+                        'roll':y_change,
+                        'yaw':z_change,
+                        'isDeg':False,
+                        'solarPower':solar_power
+                    }
+                   )
+        time.sleep(delay)
 
 if __name__ == '__main__':
-  e = Emitter("/dev/ttyACM0", 9600)
-  main(e)
+    EMITTER = Emitter("/dev/ttyACM0", 9600)
+    main(EMITTER)
