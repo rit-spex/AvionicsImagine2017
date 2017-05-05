@@ -1,16 +1,18 @@
+from socketIO_client import SocketIO
 import time
+from datetime import datetime
 import sys
 import random
 import math
 import numpy as np
-
-from socketIO_client import SocketIO
 from solarpower import getSolarPower
 from emitter import Emitter
 
 HOST = 'localhost'
 PORT = 3000
 DELAY = 0.5 #default time
+NODE_NAME = 'AVIONICS'
+UUID = 420
 
 def get_delay(val):
     """returns a delay of the given value."""
@@ -25,21 +27,26 @@ def main(emitter):
     if len(sys.argv) > 1: #in seconds
         delay = get_delay(sys.argv[1])
 
-    socket = SocketIO(HOST, PORT)
-    while True:
+    socketIO = SocketIO(HOST, PORT)
+    socketIO.emit('join', {'name': UUID, 'type': 'dataSource'})
+    while(True):
         print("here")
         x_change, y_change, z_change = emitter.calculate_attitude()
         solar_power = getSolarPower(x_change, y_change, z_change)
-        socket.emit('fromIMU',
-                    {
-                        'pitch':x_change,
-                        'roll':y_change,
-                        'yaw':z_change,
-                        'isDeg':False,
-                        'solarPower':solar_power
-                    }
-                   )
+        dataPacket = {
+          'dateCreated': str(datetime.utcnow()),
+          'name': NODE_NAME,
+          'payload':  {'isDeg':False, 'hasAvionics':True, 'roll':x_change, 'pitch':y_change, 'yaw':z_change, 'solar':solar_power}
+        }
+          
+        socketIO.emit({'sensorData': dataPacket})
         time.sleep(delay)
+
+def readData():
+  x = random.uniform(-0.01,0.01);
+  y = random.uniform(-0.01,0.01);
+  z = random.uniform(-0.01,0.01);
+  return x, y, x;
 
 if __name__ == '__main__':
     EMITTER = Emitter("/dev/ttyACM0", 9600)
