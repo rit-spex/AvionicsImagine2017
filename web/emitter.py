@@ -3,7 +3,7 @@ import ctypes
 import struct
 import math
 
-SOH = b'\x01'
+SOH = b's'
 NUM_FLOATS = 6
 NUM_BYTES = NUM_FLOATS * 4
 DECLINATION = 11.47
@@ -17,7 +17,8 @@ class Emitter:
 
     def get_data(self):
         while True:
-            if (self.port.read(1) == SOH):
+            input = self.port.read(1)
+            if (input == SOH):
                 break
         return (struct.unpack(('f' * NUM_FLOATS), self.port.read(NUM_BYTES)))
 

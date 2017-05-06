@@ -12,7 +12,7 @@ HOST = 'localhost'
 PORT = 3000
 DELAY = 0.5 #default time
 NODE_NAME = 'AVIONICS'
-UUID = 420
+UUID = 'helloasd'
 
 def get_delay(val):
     """returns a delay of the given value."""
@@ -38,7 +38,8 @@ def main(emitter):
           'name': NODE_NAME,
           'payload':  {'isDeg':False, 'hasAvionics':True, 'roll':x_change, 'pitch':y_change, 'yaw':z_change, 'solar':solar_power}
         }
-          
+        
+        print(dataPacket)
         socketIO.emit({'sensorData': dataPacket})
         time.sleep(delay)
 
@@ -49,5 +50,5 @@ def readData():
   return x, y, x;
 
 if __name__ == '__main__':
-    EMITTER = Emitter("/dev/ttyACM0", 9600)
+    EMITTER = Emitter("/dev/ttyACM2", 9600)
     main(EMITTER)
