@@ -3,7 +3,8 @@ import ctypes
 import struct
 import math
 
-SOH = b's'
+SOM = b's'
+EOM = b'f'
 NUM_FLOATS = 6
 NUM_BYTES = NUM_FLOATS * 4
 DECLINATION = 11.47
@@ -23,7 +24,7 @@ class Emitter:
 
                 while True:
                     din = self.port.read(1)
-
+                    print(din)
                     if din != EOM:
                         msg += din
                     else:

@@ -2,6 +2,7 @@ from socketIO_client import SocketIO
 import time
 from datetime import datetime
 import sys
+import json
 import random
 import math
 import numpy as np
@@ -27,21 +28,24 @@ def main(emitter):
     if len(sys.argv) > 1: #in seconds
         delay = get_delay(sys.argv[1])
 
+    print("HERE")
     socketIO = SocketIO(HOST, PORT)
+    print('sad')
+    time.sleep(0.5)
     socketIO.emit('join', {'name': UUID, 'type': 'dataSource'})
     while(True):
         print("here")
         x_change, y_change, z_change = emitter.calculate_attitude()
         solar_power = getSolarPower(x_change, y_change, z_change)
         dataPacket = {
-          'dateCreated': str(datetime.utcnow()),
+          'dateCreated': time.time(),
           'name': NODE_NAME,
           'payload':  {'isDeg':False, 'hasAvionics':True, 'roll':x_change, 'pitch':y_change, 'yaw':z_change, 'solar':solar_power}
         }
         
         print(dataPacket)
-        socketIO.emit({'sensorData': dataPacket})
-        time.sleep(delay)
+        socketIO.emit('sensorData', json.dumps(dataPacket))
+        time.sleep(.010)
 
 def readData():
   x = random.uniform(-0.01,0.01);
@@ -50,5 +54,5 @@ def readData():
   return x, y, x;
 
 if __name__ == '__main__':
-    EMITTER = Emitter("/dev/ttyACM2", 9600)
+    EMITTER = Emitter("/dev/ttyACM0", 9600)
     main(EMITTER)
