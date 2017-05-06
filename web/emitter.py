@@ -3,7 +3,8 @@ import ctypes
 import struct
 import math
 
-SOH = b'\x01'
+SOM = b's'
+EOM = b'f'
 NUM_FLOATS = 6
 NUM_BYTES = NUM_FLOATS * 4
 DECLINATION = 11.47
@@ -17,9 +18,25 @@ class Emitter:
 
     def get_data(self):
         while True:
-            if (self.port.read(1) == SOH):
-                break
-        return (struct.unpack(('f' * NUM_FLOATS), self.port.read(NUM_BYTES)))
+            if (self.port.read(1) == SOM):
+
+                msg = b''
+
+                while True:
+                    din = self.port.read(1)
+
+                    if din != EOM:
+                        msg += din
+                    else:
+                        break
+
+                vals = msg.split(b',')
+                try:
+                    return (float(vals[0]), float(vals[1]), float(vals[2]),
+                        float(vals[3]), float(vals[4]), float(vals[5]))
+                except:
+                    return (0,0,0,0,0,0)
+            
 
     def calculate_attitude(self):
         data = self.get_data()

@@ -13,7 +13,7 @@
 #define RFM95_RST 9
 #define RFM95_INT 3
 
-#define MESSAGE_SIZE 24
+#define MESSAGE_SIZE 64
 // Change to 434.0 or other frequency, must match RX's freq!
 #define RF95_FREQ 915.0
 
@@ -72,7 +72,7 @@ void loop()
       Serial.write((uint8_t) 0x1);
       // Raw Message
       Serial.write(buf, len);
-      Serial.println("Good recieve");
+      //Serial.println();
     }
     else
     {
