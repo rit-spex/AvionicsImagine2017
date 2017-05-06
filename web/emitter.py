@@ -3,8 +3,7 @@ import ctypes
 import struct
 import math
 
-SOM = b's'
-EOM = b'f'
+SOH = b's'
 NUM_FLOATS = 6
 NUM_BYTES = NUM_FLOATS * 4
 DECLINATION = 11.47
